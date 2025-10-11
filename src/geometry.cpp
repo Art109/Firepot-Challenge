@@ -3,9 +3,35 @@
 #include <vector>
 #include <algorithm>
 
-// Tolerância numérica: serve para lidar com erros de ponto flutuante
-// Em coordenadas grandes (1000–2000), erros de ~1e-6 são comuns
-const double EPS = 1e-3;
+// ---------- Função utilitária ----------
+static double cross(const Vector2& A, const Vector2& B, const Vector2& C) {
+    return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
+}
+
+static bool segmentsIntersect(const Vector2& A, const Vector2& B,
+                              const Vector2& C, const Vector2& D) {
+    double d1 = cross(A, B, C);
+    double d2 = cross(A, B, D);
+    double d3 = cross(C, D, A);
+    double d4 = cross(C, D, B);
+
+    const double EPS = 1e-9;
+
+    if ((d1 * d2) < -EPS && (d3 * d4) < -EPS)
+        return true;
+
+    auto onSegment = [&](const Vector2& P, const Vector2& Q, const Vector2& R) {
+        return (std::min(P.x, R.x) - EPS <= Q.x && Q.x <= std::max(P.x, R.x) + EPS &&
+                std::min(P.y, R.y) - EPS <= Q.y && Q.y <= std::max(P.y, R.y) + EPS);
+    };
+
+    if (std::fabs(d1) < EPS && onSegment(A, C, B)) return true;
+    if (std::fabs(d2) < EPS && onSegment(A, D, B)) return true;
+    if (std::fabs(d3) < EPS && onSegment(C, A, D)) return true;
+    if (std::fabs(d4) < EPS && onSegment(C, B, D)) return true;
+
+    return false;
+}
 
 // ---------- RECTANGLE ----------
 Rectangle::Rectangle(int id, int reduction, int x, int y, int width, int height) {
@@ -17,10 +43,24 @@ Rectangle::Rectangle(int id, int reduction, int x, int y, int width, int height)
 }
 
 bool Rectangle::isInside(const Vector2& p) const {
-    return (p.x >= origin.x - EPS && p.x <= origin.x + width + EPS &&
-            p.y >= origin.y - EPS && p.y <= origin.y + height + EPS);
+    return (p.x >= origin.x && p.x <= origin.x + width &&
+            p.y >= origin.y && p.y <= origin.y + height);
 }
 
+int Rectangle::countIntersections(const Vector2& a, const Vector2& b) const {
+    std::vector<Vector2> v = {
+        {origin.x, origin.y},
+        {origin.x + width, origin.y},
+        {origin.x + width, origin.y + height},
+        {origin.x, origin.y + height}
+    };
+
+    int count = 0;
+    for (int i = 0; i < 4; i++)
+        if (segmentsIntersect(a, b, v[i], v[(i + 1) % 4])) count++;
+
+    return std::min(count, 2);
+}
 
 // ---------- CIRCLE ----------
 Circle::Circle(int id, int reduction, int x, int y, int r) {
@@ -33,10 +73,29 @@ Circle::Circle(int id, int reduction, int x, int y, int r) {
 bool Circle::isInside(const Vector2& p) const {
     double dx = p.x - center.x;
     double dy = p.y - center.y;
-    double distSq = dx * dx + dy * dy;
-    return distSq <= (radius * radius) + EPS;
+    return dx*dx + dy*dy <= radius*radius;
 }
 
+int Circle::countIntersections(const Vector2& a, const Vector2& b) const {
+    Vector2 d = {b.x - a.x, b.y - a.y};
+    Vector2 f = {a.x - center.x, a.y - center.y};
+
+    double A = d.x*d.x + d.y*d.y;
+    double B = 2 * (f.x*d.x + f.y*d.y);
+    double C = f.x*f.x + f.y*f.y - radius*radius;
+
+    double disc = B*B - 4*A*C;
+    if (disc < 0) return 0;
+
+    disc = sqrt(disc);
+    double t1 = (-B - disc) / (2*A);
+    double t2 = (-B + disc) / (2*A);
+
+    int count = 0;
+    if (t1 >= 0 && t1 <= 1) count++;
+    if (t2 >= 0 && t2 <= 1) count++;
+    return std::min(count, 2);
+}
 
 // ---------- LINE ----------
 Line::Line(int id, int reduction, int x1, int y1, int x2, int y2) {
@@ -46,88 +105,12 @@ Line::Line(int id, int reduction, int x1, int y1, int x2, int y2) {
     this->p2 = {x2, y2};
 }
 
-int Line::countIntersections(const Vector2& a, const Vector2& b) const {
-    auto cross = [](const Vector2& A, const Vector2& B, const Vector2& C) {
-        return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
-    };
-
-    double d1 = cross(a, b, p1);
-    double d2 = cross(a, b, p2);
-    double d3 = cross(p1, p2, a);
-    double d4 = cross(p1, p2, b);
-
-    // Interseção real
-    if ((d1 * d2) < 0 && (d3 * d4) < 0)
-        return 1;
-
-    // Toca na borda (colinear)
-    auto between = [&](double v, double a, double b) {
-        return (v >= std::min(a, b) - EPS && v <= std::max(a, b) + EPS);
-    };
-
-    if (std::fabs(d1) < EPS && between(p1.x, a.x, b.x) && between(p1.y, a.y, b.y)) return 1;
-    if (std::fabs(d2) < EPS && between(p2.x, a.x, b.x) && between(p2.y, a.y, b.y)) return 1;
-
-    return 0;
-}
-
 bool Line::isInside(const Vector2& p) const {
-    // Linhas são infinitamente finas — nada está "dentro"
     return false;
 }
 
-
-// ---------- RECTANGLE ----------
-int Rectangle::countIntersections(const Vector2& a, const Vector2& b) const {
-    std::vector<Vector2> edges = {
-        {origin.x, origin.y},
-        {origin.x + width, origin.y},
-        {origin.x + width, origin.y + height},
-        {origin.x, origin.y + height}
-    };
-
-    auto intersectEdge = [&](Vector2 p1, Vector2 p2) -> bool {
-        double denom = (b.x - a.x) * (p2.y - p1.y) - (b.y - a.y) * (p2.x - p1.x);
-        if (std::fabs(denom) < EPS) return false; // paralelas
-
-        double t = ((p1.x - a.x) * (p2.y - p1.y) - (p1.y - a.y) * (p2.x - a.x)) / denom;
-        double u = ((p1.x - a.x) * (b.y - a.y) - (p1.y - a.y) * (b.x - a.x)) / denom;
-
-        // Agora aceitamos pequenas variações fora de [0, 1]
-        return (t >= -EPS && t <= 1 + EPS && u >= -EPS && u <= 1 + EPS);
-    };
-
-    int count = 0;
-    for (int i = 0; i < 4; ++i)
-        if (intersectEdge(edges[i], edges[(i + 1) % 4])) count++;
-
-    // Máximo de 2 cruzamentos (entra e sai)
-    return std::min(count, 2);
+int Line::countIntersections(const Vector2& a, const Vector2& b) const {
+    return segmentsIntersect(a, b, p1, p2) ? 1 : 0;
 }
 
 
-// ---------- CIRCLE ----------
-int Circle::countIntersections(const Vector2& a, const Vector2& b) const {
-    double dx = b.x - a.x;
-    double dy = b.y - a.y;
-    double fx = a.x - center.x;
-    double fy = a.y - center.y;
-
-    double A = dx * dx + dy * dy;
-    double B = 2 * (fx * dx + fy * dy);
-    double C = fx * fx + fy * fy - radius * radius;
-
-    double discriminant = B * B - 4 * A * C;
-    if (discriminant < 0)
-        return 0;
-
-    discriminant = std::sqrt(discriminant);
-    double t1 = (-B - discriminant) / (2 * A);
-    double t2 = (-B + discriminant) / (2 * A);
-
-    int count = 0;
-    if (t1 >= -EPS && t1 <= 1 + EPS) count++;
-    if (t2 >= -EPS && t2 <= 1 + EPS) count++;
-
-    return std::min(count, 2);
-}
