@@ -1,20 +1,44 @@
+/*
+ * export_scene.cpp
+ * -----------------
+ * Responsável por gerar o arquivo auxiliar "scene_debug.txt",
+ * usado para visualização da cena em ferramentas externas.
+ * 
+ * Caso o arquivo não possa ser criado, o erro é reportado,
+ * mas nenhuma mensagem é exibida quando a exportação é bem-sucedida
+ * (para manter a saída principal limpa).
+ */
+
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include "../include/geometry.h"
 #include "../include/parser.h"
 
-// Agora recebe vários receptores
+/**
+ * @brief Exporta os objetos da cena para um arquivo texto legível.
+ * 
+ * O arquivo gerado ("scene_debug.txt") contém três seções:
+ *   - OBSTACULOS: círculos, retângulos e linhas
+ *   - LIGHTS: posições e intensidades das fontes
+ *   - POINTS: receptores de luz
+ *
+ * @param obstacles Lista de obstáculos da cena
+ * @param lights Fontes de luz
+ * @param receptors Pontos receptores
+ */
 void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
                  const std::vector<Light>& lights,
                  const std::vector<Point>& receptors) {
-
     std::ofstream out("scene_debug.txt");
+    
+    // Se não foi possível criar o arquivo, reporta erro
     if (!out.is_open()) {
-        std::cerr << "Erro ao salvar scene_debug.txt\n";
+        std::cerr << "❌ Erro: não foi possível criar o arquivo 'scene_debug.txt'.\n";
         return;
     }
 
+    // --- Exporta obstáculos ---
     out << "OBSTACULOS\n";
     for (auto& o : obstacles) {
         if (auto* c = dynamic_cast<Circle*>(o.get())) {
@@ -28,17 +52,19 @@ void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
         }
     }
 
+    // --- Exporta fontes de luz ---
     out << "LIGHTS\n";
     for (auto& l : lights)
         out << "F " << l.pos.x << " " << l.pos.y << " " << l.intensity << "\n";
 
+    // --- Exporta receptores ---
     out << "POINTS\n";
     for (auto& p : receptors)
         out << "P " << p.pos.x << " " << p.pos.y << "\n";
 
     out.close();
-    std::cout << "✅ Cena exportada para scene_debug.txt!\n";
 }
+
 
 
 
