@@ -54,7 +54,7 @@ static bool segmentsIntersect(const Vector2& A, const Vector2& B,
 // Classe Rectangle
 // ------------------------------------------------------------
 
-Rectangle::Rectangle(int id, int reduction, int x, int y, int width, int height) {
+Rectangle::Rectangle(int id, int reduction, int x, int y, int height , int width) {
     this->id = id;
     this->reduction = reduction;
     this->origin = {x, y};

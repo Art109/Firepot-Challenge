@@ -33,12 +33,12 @@ Scene parseFile(const string& filename) {
 
         switch (type) {
             case 'R': { // Retângulo
-                int id, reduction, x, y, width, height;
-                if (!(ss >> id >> reduction >> x >> y >> width >> height)) {
+                int id, reduction, x, y, height, width;
+                if (!(ss >> id >> reduction >> x >> y >> height >> width)) {
                     cerr << "Aviso: linha inválida para retângulo. Ignorada." << endl;
                     continue;
                 }
-                auto rect = make_shared<Rectangle>(id, reduction, x, y, width, height);
+                auto rect = make_shared<Rectangle>(id, reduction, x, y, height, width);
                 scene.obstacles.push_back(rect);
                 break;
             }

@@ -61,7 +61,7 @@ public:
     Vector2 origin; // canto superior esquerdo
     int width, height;
 
-    Rectangle(int id, int reduction, int x, int y, int width, int height);
+    Rectangle(int id, int reduction, int x, int y, int height , int width);
     int countIntersections(const Vector2& a, const Vector2& b) const override;
     bool isInside(const Vector2& p) const override;
 };

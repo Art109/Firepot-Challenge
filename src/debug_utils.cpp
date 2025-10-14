@@ -43,7 +43,7 @@ void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
             out << "C " << c->center.x << " " << c->center.y << " " << c->radius << "\n";
         } else if (auto* r = dynamic_cast<Rectangle*>(o.get())) {
             out << "R " << r->origin.x << " " << r->origin.y << " "
-                << r->width << " " << r->height << "\n";
+                << r->height << " " << r->width << "\n";
         } else if (auto* l = dynamic_cast<Line*>(o.get())) {
             out << "L " << l->p1.x << " " << l->p1.y << " "
                 << l->p2.x << " " << l->p2.y << "\n";
