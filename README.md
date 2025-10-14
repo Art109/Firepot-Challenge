@@ -26,9 +26,6 @@ O cálculo considera **interseções geométricas** e **reduções de intensidad
 ├── scene_debug.txt # Arquivo auxiliar gerado automaticamente
 └── README.md
 
-yaml
-Copiar código
-
 ---
 
 ## Compilação e Execução
@@ -79,8 +76,6 @@ F	Fonte de luz	id intensidade x y
 P	Receptor	id x y
 
 Exemplo:
-yaml
-Copiar código
 L 0 11 1689 422 1353 258
 C 2 26 566 207 10
 R 5 16 8 1248 310 294
