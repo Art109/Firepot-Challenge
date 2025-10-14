@@ -14,30 +14,23 @@
 
 using namespace std;
 
-/*
- * parseFile
- * ----------
- * Lê o arquivo indicado por `filename` e constrói a estrutura `Scene`.
- * Inclui validação simples de entrada para evitar falhas de leitura.
- */
 Scene parseFile(const string& filename) {
     Scene scene;
     ifstream file(filename);
 
     if (!file.is_open()) {
         cerr << "Erro: não foi possível abrir o arquivo '" << filename << "'." << endl;
-        return scene; // retorna cena vazia
+        return scene; 
     }
 
     string line;
     while (getline(file, line)) {
-        if (line.empty()) continue; // ignora linhas em branco
+        if (line.empty()) continue; 
         stringstream ss(line);
 
         char type;
         ss >> type;
 
-        // Identifica o tipo de elemento da linha
         switch (type) {
             case 'R': { // Retângulo
                 int id, reduction, x, y, width, height;

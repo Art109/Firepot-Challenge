@@ -32,13 +32,11 @@ void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
                  const std::vector<Point>& receptors) {
     std::ofstream out("scene_debug.txt");
     
-    // Se não foi possível criar o arquivo, reporta erro
     if (!out.is_open()) {
         std::cerr << "❌ Erro: não foi possível criar o arquivo 'scene_debug.txt'.\n";
         return;
     }
 
-    // --- Exporta obstáculos ---
     out << "OBSTACULOS\n";
     for (auto& o : obstacles) {
         if (auto* c = dynamic_cast<Circle*>(o.get())) {
@@ -52,12 +50,10 @@ void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
         }
     }
 
-    // --- Exporta fontes de luz ---
     out << "LIGHTS\n";
     for (auto& l : lights)
         out << "F " << l.pos.x << " " << l.pos.y << " " << l.intensity << "\n";
 
-    // --- Exporta receptores ---
     out << "POINTS\n";
     for (auto& p : receptors)
         out << "P " << p.pos.x << " " << p.pos.y << "\n";

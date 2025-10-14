@@ -23,19 +23,16 @@ void exportScene(const std::vector<std::shared_ptr<Obstacle>>& obstacles,
                  const std::vector<Point>& receptors);
 
 int main() {
-    // Tenta carregar o arquivo de entrada
+    
     Scene scene = parseFile("regiao.txt");
-
-    // Validação simples: verifica se há conteúdo válido
+    
     if (scene.lights.empty() || scene.points.empty()) {
         std::cerr << "⚠️  Cena incompleta: verifique se há fontes e pontos receptores no arquivo.\n";
-        return 1; // encerra com código de erro
+        return 1; 
     }
 
-    // Exporta a cena para debug (opcional)
     exportScene(scene.obstacles, scene.lights, scene.points);
 
-    // Executa a simulação principal
     simulate(scene);
 
     return 0;

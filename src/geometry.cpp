@@ -62,13 +62,12 @@ Rectangle::Rectangle(int id, int reduction, int x, int y, int width, int height)
     this->height = height;
 }
 
-// Verifica se um ponto está dentro do retângulo
 bool Rectangle::isInside(const Vector2& p) const {
     return (p.x >= origin.x && p.x <= origin.x + width &&
             p.y >= origin.y && p.y <= origin.y + height);
 }
 
-// Conta quantas vezes o segmento (a,b) cruza o retângulo
+
 int Rectangle::countIntersections(const Vector2& a, const Vector2& b) const {
     std::vector<Vector2> v = {
         {origin.x, origin.y},
@@ -96,14 +95,12 @@ Circle::Circle(int id, int reduction, int x, int y, int r) {
     this->radius = r;
 }
 
-// Testa se o ponto está dentro do círculo
 bool Circle::isInside(const Vector2& p) const {
     double dx = p.x - center.x;
     double dy = p.y - center.y;
     return dx * dx + dy * dy <= radius * radius;
 }
 
-// Determina quantas vezes o segmento (a,b) cruza a circunferência
 int Circle::countIntersections(const Vector2& a, const Vector2& b) const {
     Vector2 d = {b.x - a.x, b.y - a.y};
     Vector2 f = {a.x - center.x, a.y - center.y};
@@ -141,7 +138,6 @@ bool Line::isInside(const Vector2& p) const {
     return false;
 }
 
-// Retorna 1 se o segmento (a,b) cruza esta linha, 0 caso contrário
 int Line::countIntersections(const Vector2& a, const Vector2& b) const {
     return segmentsIntersect(a, b, p1, p2) ? 1 : 0;
 }
