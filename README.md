@@ -34,7 +34,6 @@ O cálculo considera **interseções geométricas** e **reduções de intensidad
 
 Abra o terminal na pasta do projeto e execute:
 
-```bash
 g++ src/*.cpp -Iinclude -o teste
 teste.exe
 
