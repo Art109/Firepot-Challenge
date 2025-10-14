@@ -287,4 +287,3 @@ Imagem ilustrativa:
 👨‍💻 Autor
 Desenvolvido por Arthur Aguiar
 📅 2025 — Projeto de simulação geométrica e física da luz
-```
