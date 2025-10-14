@@ -34,7 +34,7 @@ with open("scene_debug.txt") as f:
 
         # Desenha cada tipo de elemento conforme o tipo
         if t == "R":  # Retângulo
-            x, y, w, h = map(float, parts[1:])
+            x, y, h, w = map(float, parts[1:])
             ax.add_patch(plt.Rectangle((x, y), w, h, fill=False, color='red', lw=1.5))
 
         elif t == "C":  # Círculo

@@ -26,14 +26,8 @@ double computeIlluminationAt(const Scene& scene, const Point& p) {
         // Percorre todos os obstáculos e aplica reduções conforme interseções
         for (auto& obs : scene.obstacles) {
             int crossings = obs->countIntersections(light.pos, p.pos);
-            bool aInside = obs->isInside(light.pos);
-            bool bInside = obs->isInside(p.pos);
 
             int totalReductions = crossings;
-            // Caso apenas uma das extremidades esteja dentro, conta como uma redução caso não tenha sido detectado nenhuma interseção
-            if (totalReductions == 0 && (aInside != bInside)) {
-                totalReductions = 1;
-            }
 
             if (totalReductions > 0) {
                 double factor = pow(1 - obs->reduction / 100.0, totalReductions);

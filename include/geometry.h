@@ -6,9 +6,9 @@
  *  - Fontes de luz e receptores
  *  - Obstáculos (retângulo, círculo e linha)
  *
- * Cada obstáculo implementa os métodos virtuais:
+ * Cada obstáculo implementa o método virtual:
  *  - countIntersections(): calcula quantas vezes um raio atravessa o obstáculo.
- *  - isInside(): verifica se um ponto está dentro da forma geométrica.
+ *  
  *
  * Essas classes fornecem a base geométrica para o cálculo da iluminação
  * no módulo "simulation.cpp".
@@ -49,8 +49,7 @@ public:
     // Retorna o número de interseções entre o obstáculo e o segmento (a, b)
     virtual int countIntersections(const Vector2& a, const Vector2& b) const = 0;
 
-    // Retorna true se o ponto p estiver dentro do obstáculo
-    virtual bool isInside(const Vector2& p) const = 0;
+    
 
     virtual ~Obstacle() = default;
 };
@@ -63,7 +62,7 @@ public:
 
     Rectangle(int id, int reduction, int x, int y, int height , int width);
     int countIntersections(const Vector2& a, const Vector2& b) const override;
-    bool isInside(const Vector2& p) const override;
+    
 };
 
 // Representa um círculo na cena
@@ -74,7 +73,7 @@ public:
 
     Circle(int id, int reduction, int x, int y, int r);
     int countIntersections(const Vector2& a, const Vector2& b) const override;
-    bool isInside(const Vector2& p) const override;
+    
 };
 
 // Representa uma linha (segmento) na cena
@@ -84,7 +83,7 @@ public:
 
     Line(int id, int reduction, int x1, int y1, int x2, int y2);
     int countIntersections(const Vector2& a, const Vector2& b) const override;
-    bool isInside(const Vector2& p) const override;
+    
 };
 
 #endif

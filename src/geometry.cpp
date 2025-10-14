@@ -62,12 +62,6 @@ Rectangle::Rectangle(int id, int reduction, int x, int y, int height , int width
     this->height = height;
 }
 
-bool Rectangle::isInside(const Vector2& p) const {
-    return (p.x >= origin.x && p.x <= origin.x + width &&
-            p.y >= origin.y && p.y <= origin.y + height);
-}
-
-
 int Rectangle::countIntersections(const Vector2& a, const Vector2& b) const {
     std::vector<Vector2> v = {
         {origin.x, origin.y},
@@ -93,12 +87,6 @@ Circle::Circle(int id, int reduction, int x, int y, int r) {
     this->reduction = reduction;
     this->center = {x, y};
     this->radius = r;
-}
-
-bool Circle::isInside(const Vector2& p) const {
-    double dx = p.x - center.x;
-    double dy = p.y - center.y;
-    return dx * dx + dy * dy <= radius * radius;
 }
 
 int Circle::countIntersections(const Vector2& a, const Vector2& b) const {
@@ -131,11 +119,6 @@ Line::Line(int id, int reduction, int x1, int y1, int x2, int y2) {
     this->reduction = reduction;
     this->p1 = {x1, y1};
     this->p2 = {x2, y2};
-}
-
-// Linhas infinitamente finas não possuem interior
-bool Line::isInside(const Vector2& p) const {
-    return false;
 }
 
 int Line::countIntersections(const Vector2& a, const Vector2& b) const {
