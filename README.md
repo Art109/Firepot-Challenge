@@ -39,13 +39,10 @@ teste.exe
 
 ### Linux / macOS
 bash
-Copiar código
 g++ src/*.cpp -Iinclude -o teste
 ./teste
 O programa lerá o arquivo regiao.txt e exibirá os resultados no formato:
 
-makefile
-Copiar código
 P0 = 1499.44
 P1 = 2239.97
 ...
