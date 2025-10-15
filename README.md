@@ -102,66 +102,19 @@ Para cada ponto receptor:
 
 A **intensidade luminosa total** recebida por um ponto receptor \( P \) é dada pela soma das contribuições de todas as fontes de luz \( F_i \), levando em conta as reduções de intensidade causadas pelos obstáculos atravessados pelo caminho entre cada fonte e o ponto:
 
-\[
-I*P = \sum*{i=1}^{N} \left( I*i \times \prod*{j=1}^{M_i} (1 - r_j) \right)
-\]
+```bash
+I_p = Σ ( I_i × Π (1 - r_j) )
+```
 
 **Onde:**
 
-- \( I_i \) → intensidade inicial da fonte de luz _i_
-- \( r_j \) → fração de redução do obstáculo _j_ (exemplo: 0.25 para 25%)
-- \( M_i \) → número de obstáculos que afetam a luz entre a fonte _i_ e o ponto receptor
-- \( N \) → número total de fontes de luz
+- I_p → intensidade total recebida no ponto receptor
+- I_i → intensidade inicial da fonte de luz i
+- r_j → fator de redução (em fração, ex: 0.25 para 25%) aplicado por cada obstáculo atravessado
+- Σ → soma sobre todas as fontes de luz
+- Π → produto sobre todos os obstáculos que o feixe atravessa entre a fonte e o receptor
 
-> 🔸 Se o caminho entre uma fonte e o ponto não for bloqueado, a luz chega **sem atenuação** (\( r_j = 0 \)).
-
----
-
-## 📐 Cálculo das Interseções
-
-Para determinar se um obstáculo afeta a luz entre uma fonte \( F \) e um ponto \( P \), o programa verifica **interseções geométricas** entre o segmento \( \overline{FP} \) e as bordas dos obstáculos.
-
-### 🔹 Retângulos
-
-Um retângulo é representado por suas quatro arestas.  
-O programa verifica se o segmento \( \overline{FP} \) cruza alguma das quatro bordas, utilizando o **produto vetorial (cross product)**:
-
-\[
-\text{cross}(A,B,C) = (B_x - A_x)(C_y - A_y) - (B_y - A_y)(C_x - A_x)
-\]
-
-Se os sinais dos produtos vetoriais entre os pares de pontos forem **opostos**, os segmentos se cruzam.
-
----
-
-### 🔹 Círculos
-
-A interseção é resolvida de forma **analítica**, substituindo a equação paramétrica da linha \( \overline{FP} \) na equação do círculo:
-
-\[
-A t^2 + B t + C = 0
-\]
-
-com:
-
-\[
-A = d_x^2 + d_y^2, \quad
-B = 2(f_x d_x + f_y d_y), \quad
-C = f_x^2 + f_y^2 - r^2
-\]
-
-O discriminante \( \Delta = B^2 - 4AC \) determina:
-
-- \( \Delta < 0 \): sem interseção
-- \( \Delta = 0 \): tangente (1 ponto)
-- \( \Delta > 0 \): duas interseções
-
----
-
-### 🔹 Linhas
-
-Linhas são tratadas como segmentos finos.  
-Se o feixe de luz cruza o segmento definido, ocorre uma redução conforme o fator especificado.
+> 🔸 Se o caminho entre uma fonte e o ponto não for bloqueado, a luz chega **sem atenuação** ( r_j = 0 ).
 
 ---
 
