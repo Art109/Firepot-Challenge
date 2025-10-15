@@ -108,9 +108,9 @@ I*p = \sum*{i=1}^{N} \left( I*i \times \prod*{j=1}^{M_i} (1 - r_j) \right)
 
 Onde:
 
-- \( I_i \) → intensidade inicial da fonte de luz _i_
-- \( r_j \) → fração de redução do obstáculo _j_ (exemplo: 0.25 para 25%)
-- \( M_i \) → número de obstáculos que afetam a luz entre a fonte _i_ e o ponto receptor
+- \( I*i \) → intensidade inicial da fonte de luz \_i*
+- \( r*j \) → fração de redução do obstáculo \_j* (exemplo: 0.25 para 25%)
+- \( M*i \) → número de obstáculos que afetam a luz entre a fonte \_i* e o ponto receptor
 - \( N \) → número total de fontes de luz
 
 Se o caminho entre uma fonte e o ponto não for bloqueado, a luz chega sem atenuação.
