@@ -34,17 +34,17 @@ O cálculo considera **interseções geométricas** e **reduções de intensidad
 
 ### 🪟 **Windows**
 
-```bash
-g++ src/*.cpp -Iinclude -o teste
+g++ src/\*.cpp -Iinclude -o teste
 teste.exe
-```
+
+````
 
 ### 🐧 **Linux / macOS**
 
 ```bash
 g++ src/*.cpp -Iinclude -o teste
 ./teste
-```
+````
 
 O programa lerá o arquivo `regiao.txt` e exibirá os resultados no formato:
 
